@@ -27,7 +27,8 @@ let () =
   let graph1 = gmap graph (fun x -> "1") in
 
   (* Rewrite the graph that has been read. *)
-  let () = write_file outfile graph1 in
+  (*let () = write_file outfile graph1 in*)
+  let () = export outfile graph1 in
 
   ()
 

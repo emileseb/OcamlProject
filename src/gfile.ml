@@ -3,6 +3,26 @@ open Printf
 
 type path = string
 
+let export path graph =
+
+  (* Open a write-file. *)
+  let ff = open_out path in
+
+  (* Write in this file. *)
+  fprintf ff "digraph finite_state_machine {\n
+    rankdir=LR;\n
+    size=\"8,5\"\n
+    node [shape = circle];\n" ;
+
+  e_iter graph (fun id1 id2 lbl -> fprintf ff "%d -> %d [ label = \"%s\" ];\n" id1 id2 lbl);
+
+
+  fprintf ff "}" ;
+
+  close_out ff ;
+  ()
+;;
+
 (* Format of text files:
    % This is a comment
 
@@ -17,7 +37,6 @@ type path = string
    e 0 2 8
 
 *)
-
 let write_file path graph =
 
   (* Open a write-file. *)
