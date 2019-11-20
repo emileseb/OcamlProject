@@ -16,7 +16,7 @@ val ecart_of_flot: (int * int) graph -> int graph
 val find_better_path: int graph -> (int * int) graph -> (int * int graph)
 
 (*trouve un chemin de source à puit*)
-val find_path: int graph -> int list -> int -> (int list * int) option
+val find_path: int graph -> id -> id -> (id list * int) option
 
 (*renvoie la capacité max du chemin*)
 val capacite_max_chemin: int graph -> int
