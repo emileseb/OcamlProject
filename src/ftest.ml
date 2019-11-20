@@ -1,5 +1,6 @@
 open Gfile
 open Tools
+open Fordfulkerson
 
 let () =
 
@@ -24,7 +25,7 @@ let () =
   (* Open file *)
   let graph = from_file infile in
 
-  let graph1 = gmap graph (fun x -> "1") in
+  let graph1 = gmap_string_of_flot (gmap_flot_of_string graph) in
 
   (* Rewrite the graph that has been read. *)
   (*let () = write_file outfile graph1 in*)
