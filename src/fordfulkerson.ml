@@ -1,5 +1,6 @@
-<<<<<<< HEAD
 open Tools
+open Graph
+
 (*A TESTER*)
 (*Instance de tools.gmap qui prépare le graph avec les capacités*)
 let gmap_flot_of_string = 
@@ -31,16 +32,6 @@ let ecart_of_flot =
 
 ;;
 
-(*Update le graph de flot avec un meilleur chemin*)
-(*let find_better_path e_graph f_graph = function ->
-  let better_path = Some ([1,2],2) in(*y insérer l'application de find_path *) 
-  match better_path with
-  |None -> None
-  |Some (chemin, capacite) -> 
-  ;;*)
-=======
-open Graph
-
 let find_path = fun graph source puit -> 
   let rec find_path2 = fun  g node target visited m ->
     let o = List.find_opt (fun a -> a = node) visited in
@@ -57,4 +48,10 @@ let find_path = fun graph source puit ->
   let (path, m, visited) = find_path2 graph source puit [] Stdlib.max_int in
   if m = -1 then None else Some(path, m)
 
->>>>>>> ff0e3b170209fe5ca955523869b749216f2fadeb
+(*Update le graph de flot avec un meilleur chemin*)
+(*let find_better_path e_graph f_graph = function ->
+  let better_path = Some ([1,2],2) in(*y insérer l'application de find_path *) 
+  match better_path with
+  |None -> None
+  |Some (chemin, capacite) -> 
+  ;;*)
