@@ -62,10 +62,38 @@ let find_path = fun graph source puit ->
   let (path, m, visited) = find_path2 graph source puit [] Stdlib.max_int in
   if m = -1 then None else Some(path, m)
 
-(*Update le graph de flot avec un meilleur chemin et renvoie la quantité dont il à été incrementé *)
-let update_flot = fun chemin f_graph -> 
-  let flot_adder = fun flot quantite -> match flot with 
-    |(a,b)-> (a+quantite, b) in
-  e_fold chemin (fun gr id1 id2 lbl -> add_arc gr id1 id2 (f lbl)) f_graph;;
-;;
+(*Update le graph de flot avec un meilleur chemin*)
+(*let find_better_path e_graph f_graph = function ->
+  let better_path = Some ([1,2],2) in(*y insérer l'application de find_path *) 
+  match better_path with
+  |None -> None
+  |Some (chemin, capacite) -> 
+  ;;*)
 
+let update_flot = fun a b -> b
+
+let path_to_graph = fun (path, m) ->
+  let rec f = fun a path ->
+    match path with
+    | [] -> empty_graph
+    | b::rest -> add_arc (f b rest) a b m in
+  match path with
+  | [] -> empty_graph
+  | first::rest -> f first rest
+
+let update_flot = fun chemin f_graph ->
+  e_fold chemin (fun acc id1 id2 m -> 
+      let arc = find_arc acc id1 id2 in
+      match arc with
+      | None -> let arc2 = find_arc acc id2 id1 in
+        begin match arc2 with
+          | None -> empty_graph
+          | Some(flow2, capacity2) -> new_arc acc id2 id1 (min capacity2 (flow2 - m), capacity2)
+        end
+      | Some(flow, capacity) -> let g2 = new_arc acc id1 id2 (min capacity (flow + m), capacity) in
+        let arc2 = find_arc g2 id2 id1 in
+        begin match arc2 with
+          | None -> g2
+          | Some(flow2, capacity2) -> new_arc g2 id2 id1 (min capacity2 (flow2 - (flow + m - capacity)), capacity2)
+        end
+    ) f_graph
