@@ -11,24 +11,17 @@ let gmap_flot_of_string =
 (*le contraire de la fct précédente*)
 let gmap_string_of_flot =
   let string_of_flot = fun f -> match f with
-    |(a,b) -> Printf.sprintf "(%d/%d)" a b in 
+    | (a,b) -> Printf.sprintf "(%d/%d)" a b in 
   fun graph -> gmap graph string_of_flot
 ;;
 
-(*PAS FINI*)
-(* Algo de FordFulkerson*)
-(*let fordfulkerson s=  fun s_graph source puit-> (*string graph -> (int * string graph)*) 
-  (*let f_graph = flot_of_string s_graph in
-    let e_graph = ecart_of_flot f_graph in
-    let run = Match find_path e_graph source puit with
-    |None -> (* end *)
-    |Some (chemin, capacite) -> (*incrémenter e_graph*)
+(*a pour but de tester les graphs d'écart*)
+let gmap_string_of_int =
+  fun graph -> gmap graph string_of_int
+;;
 
-  *)
-  (1,[])
-  ;;*)
 
-(*Pas Fini*)
+(*Validee*)
 (*Créé le graph d'écart à partir du graph de capacité*) 
 let ecart_of_flot = fun graph ->
   let aller = fun lb -> match lb with 
@@ -62,25 +55,17 @@ let find_path = fun graph source puit ->
   let (path, m, visited) = find_path2 graph source puit [] Stdlib.max_int in
   if m = -1 then None else Some(path, m)
 
-(*Update le graph de flot avec un meilleur chemin*)
-(*let find_better_path e_graph f_graph = function ->
-  let better_path = Some ([1,2],2) in(*y insérer l'application de find_path *) 
-  match better_path with
-  |None -> None
-  |Some (chemin, capacite) -> 
-  ;;*)
-
-let update_flot = fun a b -> b
-
+(*A tester*)
 let path_to_graph = fun (path, m) ->
   let rec f = fun a path ->
     match path with
     | [] -> empty_graph
-    | b::rest -> add_arc (f b rest) a b m in
+    | b::rest -> add_arc (new_node (f b rest) a) a b m in
   match path with
   | [] -> empty_graph
   | first::rest -> f first rest
 
+(*Validee*)
 let update_flot = fun chemin f_graph ->
   e_fold chemin (fun acc id1 id2 m -> 
       let arc = find_arc acc id1 id2 in
@@ -97,3 +82,17 @@ let update_flot = fun chemin f_graph ->
           | Some(flow2, capacity2) -> new_arc g2 id2 id1 (min capacity2 (flow2 - (flow + m - capacity)), capacity2)
         end
     ) f_graph
+
+(*A TESTER*)
+(* Algo de FordFulkerson*)
+let fordfulkerson =  fun s_graph source puit-> (*string graph -> (int * string graph)*) 
+  let f_graph = gmap_flot_of_string s_graph in
+  let rec run = fun acc ->
+    let e_graph = ecart_of_flot acc in
+    match find_path e_graph source puit with
+    |None -> (0, gmap_string_of_flot acc) (* mettre à jour le flot max*)
+    |Some chemin -> run (update_flot (path_to_graph chemin) acc) in
+  run f_graph
+
+
+;;
