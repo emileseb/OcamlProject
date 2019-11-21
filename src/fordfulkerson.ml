@@ -38,7 +38,7 @@ let ecart_of_flot = fun graph ->
   let g = clone_nodes graph in
   let create_arc = fun gr id1 id2 lbl -> match (retour lbl) with (*Il faudrait aussi tester si un arc n'a pas déjà été créé (cas ou il y a une capacité aller et retour) *)
     | 0 -> new_arc gr id1 id2 (aller lbl) 
-    | x -> new_arc gr id1 id2 (aller lbl) -> new_arc gr id2 id1 x in
+    | x -> new_arc (new_arc gr id1 id2 (aller lbl)) id2 id1 x in
   e_fold graph (fun gr id1 id2 lbl -> create_arc gr id1 id2 lbl) g
 ;;
 
