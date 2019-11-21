@@ -36,9 +36,11 @@ let ecart_of_flot = fun graph ->
   let retour = fun lb -> match lb with 
     |(a,b) -> a in
   let g = clone_nodes graph in
-  let create_arc = fun gr id1 id2 lbl -> match (retour lbl) with (*Il faudrait aussi tester si un arc n'a pas déjà été créé (cas ou il y a une capacité aller et retour) *)
-    | 0 -> new_arc gr id1 id2 (aller lbl) 
-    | x -> new_arc (new_arc gr id1 id2 (aller lbl)) id2 id1 x in
+  let create_arc = fun gr id1 id2 lbl -> match (retour lbl) with 
+    | 0 -> add_arc gr id1 id2 (aller lbl) 
+    | x -> match (aller lbl) with 
+      | 0 -> add_arc gr id2 id1 x
+      | y -> add_arc (add_arc gr id1 id2 (y)) id2 id1 x in
   e_fold graph (fun gr id1 id2 lbl -> create_arc gr id1 id2 lbl) g
 ;;
 
@@ -60,10 +62,10 @@ let find_path = fun graph source puit ->
   let (path, m, visited) = find_path2 graph source puit [] Stdlib.max_int in
   if m = -1 then None else Some(path, m)
 
-(*Update le graph de flot avec un meilleur chemin*)
-(*let find_better_path e_graph f_graph = function ->
-  let better_path = Some ([1,2],2) in(*y insérer l'application de find_path *) 
-  match better_path with
-  |None -> None
-  |Some (chemin, capacite) -> 
-  ;;*)
+(*Update le graph de flot avec un meilleur chemin et renvoie la quantité dont il à été incrementé *)
+let update_flot = fun chemin f_graph -> 
+  let flot_adder = fun flot quantite -> match flot with 
+    |(a,b)-> (a+quantite, b) in
+  e_fold chemin (fun gr id1 id2 lbl -> add_arc gr id1 id2 (f lbl)) f_graph;;
+;;
+

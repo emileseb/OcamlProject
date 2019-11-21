@@ -14,7 +14,7 @@ val gmap_string_of_flot: (int * int) graph -> string graph
 val ecart_of_flot: (int * int) graph -> int graph
 
 (*Update le graph de flot avec un meilleur chemin et renvoie la quantité dont il à été incrementé *)
-val update_flot: (id list * int) -> (int * int) graph -> (int * int) graph
+val update_flot: int graph -> (int * int) graph -> (int * int) graph
 
 (* fusionne les différents arcs entre 2 noeuds pour en avoir maximum 1 dans chaque sens*)
 val fusion_arc: int graph -> int graph 
