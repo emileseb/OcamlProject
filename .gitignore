@@ -1,1 +1,6 @@
 _build/*
+.merlin
+_tags
+ftest.native
+.vscode
+_build
