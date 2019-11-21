@@ -67,3 +67,31 @@ let find_path = fun graph source puit ->
   |None -> None
   |Some (chemin, capacite) -> 
   ;;*)
+
+let update_flot = fun a b -> b
+
+let path_to_graph = fun (path, m) ->
+  let rec f = fun a path ->
+    match path with
+    | [] -> empty_graph
+    | b::rest -> add_arc (f b rest) a b m in
+  match path with
+  | [] -> empty_graph
+  | first::rest -> f first rest
+
+let update_flot = fun chemin f_graph ->
+  e_fold chemin (fun acc id1 id2 m -> 
+      let arc = find_arc acc id1 id2 in
+      match arc with
+      | None -> let arc2 = find_arc acc id2 id1 in
+        begin match arc2 with
+          | None -> empty_graph
+          | Some(flow2, capacity2) -> new_arc acc id2 id1 (min capacity2 (flow2 - m), capacity2)
+        end
+      | Some(flow, capacity) -> let g2 = new_arc acc id1 id2 (min capacity (flow + m), capacity) in
+        let arc2 = find_arc g2 id2 id1 in
+        begin match arc2 with
+          | None -> g2
+          | Some(flow2, capacity2) -> new_arc g2 id2 id1 (min capacity2 (flow2 - (flow + m - capacity)), capacity2)
+        end
+    ) f_graph
