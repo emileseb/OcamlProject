@@ -37,34 +37,6 @@ let ecart_of_flot = fun graph ->
   e_fold graph (fun gr id1 id2 lbl -> create_arc gr id1 id2 lbl) g
 ;;
 
-(*A TESTER*)
-(*trouve un chemin de source à puit*)
-let find_path = fun graph source puit -> 
-  let rec find_path2 = fun  g node target visited m ->
-    let o = List.find_opt (fun a -> a = node) visited in
-    match o with
-    | Some x -> ([], -1, [])
-    | None ->
-      let arcs = out_arcs g node
-      and visited2 = node::visited in
-      let rec f = fun arcs2 visited3 -> match arcs2 with
-        | [] -> ([], -1, [])
-        | (id, lbl)::rest -> let (path, m2, visited4) = find_path2 g id target visited3  (Stdlib.min m lbl) in
-          if m2 = -1 then f rest visited4 else (path, m2, visited4) in
-      f arcs visited2 in
-  let (path, m, visited) = find_path2 graph source puit [] Stdlib.max_int in
-  if m = -1 then None else Some(path, m)
-
-(*A tester*)
-let path_to_graph = fun (path, m) ->
-  let rec f = fun a path ->
-    match path with
-    | [] -> empty_graph
-    | b::rest -> add_arc (new_node (f b rest) a) a b m in
-  match path with
-  | [] -> empty_graph
-  | first::rest -> f first rest
-
 (*Validee*)
 let update_flot = fun chemin f_graph ->
   e_fold chemin (fun acc id1 id2 m -> 
@@ -82,6 +54,34 @@ let update_flot = fun chemin f_graph ->
           | Some(flow2, capacity2) -> new_arc g2 id2 id1 (min capacity2 (flow2 - (flow + m - capacity)), capacity2)
         end
     ) f_graph
+
+(*Validée*)
+let path_to_graph = fun (path, m) ->
+  let rec f = fun a path ->
+    match path with
+    | [] -> empty_graph
+    | b::rest -> add_arc (new_node (f b rest) a) a b m in
+  match path with
+  | [] -> empty_graph
+  | first::rest -> f first rest
+
+(*A TESTER*)
+(*trouve un chemin de source à puit*)
+let find_path = fun graph source puit -> 
+  let rec find_path2 = fun  g node target visited m ->
+    let o = List.find_opt (fun a -> a = node) visited in
+    match o with
+    | Some x -> ([], -1, [])
+    | None ->
+      let arcs = out_arcs g node
+      and visited2 = node::visited in
+      let rec f = fun arcs2 visited3 -> match arcs2 with
+        | [] -> ([], -1, [])
+        | (id, lbl)::rest -> let (path, m2, visited4) = find_path2 g id target visited3  (Stdlib.min m lbl) in
+          if m2 = -1 then f rest visited4 else (path, m2, visited4) in
+      f arcs visited2 in
+  let (path, m, visited) = find_path2 graph source puit [] Stdlib.max_int in
+  if m = -1 then None else Some(path, m)
 
 (*A TESTER*)
 (* Algo de FordFulkerson*)
