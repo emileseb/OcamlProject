@@ -69,6 +69,7 @@ let path_to_graph = fun (path, m) ->
 (*trouve un chemin de source à puit*)
 let find_path = fun graph source puit -> 
   let rec find_path2 = fun  g node target visited m ->
+    if node = target then ([node], m, []) else
     let o = List.find_opt (fun a -> a = node) visited in
     match o with
     | Some x -> ([], -1, [])
@@ -78,7 +79,7 @@ let find_path = fun graph source puit ->
       let rec f = fun arcs2 visited3 -> match arcs2 with
         | [] -> ([], -1, [])
         | (id, lbl)::rest -> let (path, m2, visited4) = find_path2 g id target visited3  (Stdlib.min m lbl) in
-          if m2 = -1 then f rest visited4 else (path, m2, visited4) in
+          if m2 = -1 then f rest visited4 else (node::path, m2, visited4) in
       f arcs visited2 in
   let (path, m, visited) = find_path2 graph source puit [] Stdlib.max_int in
   if m = -1 then None else Some(path, m)
