@@ -25,7 +25,7 @@ val update_flot: int graph -> (int * int) graph -> (int * int) graph
 (* fusionne les différents arcs entre 2 noeuds pour en avoir maximum 1 dans chaque sens*)
 val path_to_graph: (id list * int) -> int graph
 
-(*A Tester --> Ne trouve pas de chemin*)
+(*Validée*)
 (*trouve un chemin de source à puit*)
 (*Graph d'écart -> Source -> Puit -> (chemin trouvé * capacité max du chemin) si trouvé *)
 val find_path: int graph -> id -> id -> (id list * int) option

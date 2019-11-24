@@ -37,14 +37,14 @@ let () =
   (*let graph1 = gmap_string_of_int (path_to_graph ([0; 1; 5], 7) ) in*)
 
   (*Test find_path*)
-  let f_path_test = match find_path (ecart_of_flot (gmap_flot_of_string graph)) 0 5 with (* n'écrit que le chemin trouvé. *)
+  (*let f_path_test = match find_path (ecart_of_flot (gmap_flot_of_string graph)) 0 5 with (* n'écrit que le chemin trouvé. *)
     | None ->([0; 1], 7) (*Le graph est sensé trouver un chemin entre 1 et 5. S'il n'en trouve pas il rnvoie seulement le noeud 0 et 1 *)
     | Some x -> x in
-  let graph1 = gmap_string_of_int (path_to_graph f_path_test) in
+    let graph1 = gmap_string_of_int (path_to_graph f_path_test) in*)
 
   (*Test de Ford Fulkerson*)
-  (*let graph1 = match fordfulkerson graph 0 5 with
-    | (capacite, gr) -> gr in *)
+  let graph1 = match fordfulkerson graph _source _sink with
+    | (capacite, gr) -> gr in
 
   (* Rewrite the graph that has been read. *)
   (*let () = write_file outfile graph1 in*)
