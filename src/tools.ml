@@ -11,3 +11,8 @@ let add_arc = fun graph id1 id2 n ->
   match arc with
   | None -> new_arc graph id1 id2 n
   | Some lbl -> new_arc graph id1 id2 (lbl + n)
+
+
+let rec print_list = function 
+    [] -> ()
+  | e::l -> print_int e ; print_string " " ; print_list l
